@@ -69,9 +69,14 @@ To get a local copy up and running, follow these simple steps.
 ## API Endpoints
 
 *   **`/`**: Heartbeat endpoint to check the server's status.
-*   **/auth/login**: Log in an existing user.
-*   **/auth/signup**: Register a new user.
+*   **`/auth/login`**: Log in an existing user.
+*   **`/auth/signup`**: Register a new user.
 
 ## Database
 
 This project uses **PostgreSQL** as its database. The `pgx/v5` driver is used for database connectivity.
+This project is only used as a template to authentication, thus it works with only one table, `users` with the following schema:
+
+| userid | name   | email  | password | created_at |
+|--------|--------|--------|----------|------------|
+| UUID   | string | string | string   | number     |
