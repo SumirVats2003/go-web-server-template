@@ -32,25 +32,22 @@ func InitAuthApi(db *pgx.Conn, ctx context.Context) (AuthApi, error) {
 }
 
 func (a AuthApi) Login(loginRequest models.LoginRequest) (string, error) {
-	// databaseDocument := a.authRepository.LoginUser(loginRequest.Email)
-	//
-	// var user models.User
-	// err := databaseDocument.Decode(&user)
-	// if err != nil {
-	// 	return "", errors.New("Invalid credentials")
-	// }
-	//
-	// err = bcrypt.CompareHashAndPassword([]byte(user.User.Password), []byte(loginRequest.Password))
-	// if err != nil {
-	// 	return "", err
-	// }
-	//
-	// userToken, err := createToken(loginRequest.Email)
-	// if err != nil {
-	// 	return "", err
-	// }
+	user, err := a.authRepository.LoginUser(loginRequest.Email)
+	if err != nil {
+		return "", errors.New("Invalid credentials")
+	}
 
-	return "", nil
+	err = bcrypt.CompareHashAndPassword([]byte(user.User.Password), []byte(loginRequest.Password))
+	if err != nil {
+		return "", err
+	}
+
+	userToken, err := createToken(loginRequest.Email)
+	if err != nil {
+		return "", err
+	}
+
+	return userToken, nil
 }
 
 func (a AuthApi) Signup(signupRequest models.SignupRequest) (models.User, error) {

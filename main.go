@@ -17,7 +17,7 @@ func main() {
 		log.Println("Warning: .env file not found, using empty variables")
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*20)
+	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	app, err := app.InitApp(ctx)
