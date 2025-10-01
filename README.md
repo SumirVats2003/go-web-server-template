@@ -75,8 +75,10 @@ To get a local copy up and running, follow these simple steps.
 ## Database
 
 This project uses **PostgreSQL** as its database. The `pgx/v5` driver is used for database connectivity.
-This project is only used as a template to authentication, thus it works with only one table, `users` with the following schema:
+Since this project is only a template, it works with only one table, `users`, with the following schema:
 
 | userid | name   | email  | password | created_at |
 |--------|--------|--------|----------|------------|
 | UUID   | string | string | string   | number     |
+
+You can use this template to get rid of repeated boilerplate code and focus on business and database logic.
