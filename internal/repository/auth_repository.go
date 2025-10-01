@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 
 	"github.com/SumirVats2003/go-web-server-template/models"
 	"github.com/jackc/pgx/v5"
@@ -43,7 +44,11 @@ func (a AuthRepository) LoginUser(email string) (models.User, error) {
 	}, nil
 }
 
-func (a AuthRepository) SignupUser(signupRequest models.SignupRequest) (models.User, error) {
+func (a AuthRepository) SignupUser(signupRequest models.SignupRequest) (string, error) {
+	if a.isExistingUser(signupRequest.Email) {
+		return "", errors.New("User Already Exists")
+	}
+
 	var userId string
 	query := getSignupQuery()
 
@@ -55,13 +60,10 @@ func (a AuthRepository) SignupUser(signupRequest models.SignupRequest) (models.U
 	).Scan(&userId)
 
 	if err != nil {
-		return models.User{}, err
+		return "", err
 	}
 
-	return models.User{
-		UserId: userId,
-		User:   signupRequest,
-	}, nil
+	return userId, nil
 }
 
 func getSignupQuery() string {
@@ -72,5 +74,14 @@ func getSignupQuery() string {
 	`
 }
 
-func (a AuthRepository) findUser(email string) {
+func (a AuthRepository) isExistingUser(email string) bool {
+	query := "SELECT userid FROM users WHERE email=$1"
+	var id string
+
+	err := a.db.QueryRow(a.ctx, query, email).Scan(&id)
+	if err != nil {
+		return false
+	}
+
+	return true
 }
